@@ -72,3 +72,46 @@
 - Add CW/CCW stepper microstepping configuration notes and motor current limiting steps.
 
 ---
+**Wiring Diagram**
+
+Below is a concise wiring table and a simple ASCII diagram showing how the main components map to pins used in the sketch.
+
+Wiring table (component → board pin):
+- **Left stepper STEP**: 2
+- **Left stepper DIR**: 5
+- **Right stepper STEP**: 3
+- **Right stepper DIR**: 6
+- **US Left TRIG / ECHO**: 22 / 23
+- **US Right TRIG / ECHO**: 24 / 25
+- **Radar upper TRIG / ECHO**: 26 / 27
+- **Radar lower TRIG / ECHO**: 28 / 29
+- **Gripper center TRIG / ECHO**: 30 / 31
+- **IR rear**: A0
+- **Battery sense**: A1
+- **Servo (radar)**: 6
+- **Servo (gripper)**: 7
+- **Servo (tilt)**: 8
+- **TCS3200 S0,S1,S2,S3,OUT**: 9,10,11,12,13
+- **START button**: 14 (INPUT_PULLUP)
+- **STOP button**: 15 (INPUT_PULLUP)
+
+Simple ASCII wiring diagram (logical view):
+
+  [Arduino Mega / UNO-style header]
+  +---------------------------------------------+
+  | 2 STEP_L    3 STEP_R    5 DIR_L    6 DIR_R |
+  | 9..13 TCS3200  6 SERVO_RADAR 7 SERVO_GRIP  |
+  | 8 SERVO_TILT  A0 IR_REAR  A1 BATTERY       |
+  | 22/23 US_L   24/25 US_R   26/27 RAD_UPPER  |
+  | 28/29 RAD_LO 30/31 US_CENTER 14 START 15 STOP|
+  +---------------------------------------------+
+
+Notes and wiring tips:
+- Use the A4988 (or similar) with correct VMOT and GND wiring. Motor supply should be separate from the logic 5V supply; share common ground.
+- Connect servo power to a stable 5V regulator if multiple servos draw current; avoid powering servos from the Arduino 5V regulator when using motors.
+- Ultrasonic sensors: TRIG pins set as OUTPUT, ECHO pins to Arduino INPUT; ensure signal voltage levels are compatible (use level shifting if necessary).
+- TCS3200: S0/S1 configure frequency scaling (the sketch sets S0 HIGH, S1 LOW for 20% scaling). Use the `COLOR_OUT` pin for pulse measurement.
+- Buttons are pulled up in software (`INPUT_PULLUP`) so wire them to GND when pressed.
+
+CONFIG.h
+- A `CONFIG.h` file with all pin and constant definitions has been added to the project for easier configuration: `CONFIG.h`.
